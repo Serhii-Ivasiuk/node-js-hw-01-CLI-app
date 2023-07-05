@@ -3,6 +3,7 @@ import fs from 'fs/promises';
 import path from 'path';
 // Helpers
 import { generateId } from './helpers/generateId.js';
+import { checkExistingContact } from './helpers/checkExistingContact.js';
 
 const contactsPath = path.join('db', 'contacts.json');
 
@@ -25,7 +26,9 @@ export const removeContact = async contactId => {
 
   const index = allConacts.findIndex(item => item.id === contactId);
 
-  if (index === -1) null;
+  if (index === -1) {
+    return null;
+  }
 
   const [removedContact] = allConacts.splice(index, 1);
 
@@ -36,6 +39,17 @@ export const removeContact = async contactId => {
 
 export const addContact = async (name, email, phone) => {
   const allConacts = await listContacts();
+
+  const isExistingContact = checkExistingContact(
+    allConacts,
+    name,
+    email,
+    phone
+  );
+
+  if (isExistingContact) {
+    return isExistingContact;
+  }
 
   const newContact = {
     id: await generateId(),
