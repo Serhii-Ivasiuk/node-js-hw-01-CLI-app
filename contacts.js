@@ -5,7 +5,7 @@ import path from 'path';
 import { generateId } from './helpers/generateId.js';
 import { checkExistingContact } from './helpers/checkExistingContact.js';
 
-const contactsPath = path.join('db', 'contacts.json');
+const contactsPath = path.resolve('db', 'contacts.json');
 
 export const listContacts = async () => {
   const buffer = await fs.readFile(contactsPath);
